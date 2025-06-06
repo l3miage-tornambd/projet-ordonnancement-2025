@@ -38,14 +38,28 @@ class Operation(object):
         self._schedule_info : OperationScheduleInfo or None  = None
 
         # On a besoin à un moment d'avoir les informations de processing_time et d'energy condommé pour la méthode schedule (à voir comment on alimente ça)
-        self.machine_options: Dict[int, Tuple[int, int]] = {}
+        self._machine_options: Dict[int, Tuple[int, int]] = {}
 
+    @property
+    def machine_options(self) -> Dict[int, Tuple[int, int]]:
+        '''
+        Returns the machine options for the operation.
+        The key is the machine ID and the value is a tuple of (processing_time, energy_consumption)
+        '''
+        return self._machine_options
+
+    @machine_options.setter
+    def machine_options(self, options: Dict[int, Tuple[int, int]]):
+        '''
+        Sets the machine options for the operation.
+        The key is the machine ID and the value is a tuple of (processing_time, energy_consumption)
+        '''
+        self._machine_options = options
 
     def reset(self):
         '''
         Removes scheduling informations
         '''
-        self._is_scheduled = False
         self._schedule_info = None
 
     def add_predecessor(self, operation):
@@ -90,7 +104,7 @@ class Operation(object):
         Returns True if the operation is assigned
         and False otherwise
         '''
-        return self._is_scheduled is not None
+        return self._schedule_info is not None
 
     @property
     def assigned_to(self) -> int:

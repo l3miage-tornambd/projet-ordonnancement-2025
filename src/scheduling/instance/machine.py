@@ -80,10 +80,10 @@ class Machine(object):
 
         # Cas la machine est éteinte, elle est dispo à partir du dernier arrêt.
         if self._stop_times:
-            return self._stop_times[-1]
+            return self._stop_times[-1] + self._set_up_time
 
-        # Cas initial, la machine est dispo à t=0
-        return 0
+        # Cas initial ou elle a jamais été démarrée
+        return self._set_up_time
 
     def add_operation(self, operation: Operation, start_time: int) -> int:
         '''
@@ -110,7 +110,7 @@ class Machine(object):
             # Cas ou la machine est déjà en marche, on peut commencer l'opération dès que possible
             actual_start = potential_start_time
 
-        # On ajoute l'opération en la lien à la machine
+        # On ajoute l'opération en lien à la machine
         operation.schedule(self.machine_id, actual_start, check_success=False)
 
         # On ajoute l'opération à la liste de la machine et pourquoi pas la trié par ordre de début au cas ou (pourrait être utile pour la suite)
@@ -135,7 +135,7 @@ class Machine(object):
         Total time during which the machine is running
         '''
         total_time = 0
-        # On additionne le temps de fonctionnement de chaque opération
+        # On additionne le temps ou la machine a tourné
         for i in range(len(self._stop_times)):
             total_time += self._stop_times[i] - self._start_times[i]
 

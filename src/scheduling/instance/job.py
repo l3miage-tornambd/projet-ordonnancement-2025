@@ -37,6 +37,7 @@ class Job(object):
         for op in self._operations:
             op.reset()
 
+        self._current_operation_index = 0
         self._next_operation_index = 0
 
     @property
@@ -51,9 +52,8 @@ class Job(object):
         '''
         Returns the next operation to be scheduled
         '''
-        if self.planned:
-            return None
 
+        # Renvoie la prochaine opération si la list n'est pas vide et que l'index est valide
         return self._operations[self._next_operation_index]
 
     def schedule_operation(self):
